@@ -46,22 +46,14 @@ void ClearScreen()
 	system("CLS");
 	std::cin.clear();
 	fflush(stdin);
-
 }
 
-bool ExitApp()
+void ExitApp()
 {
 	int nwidth = 40, key = 0;
 	ClearScreen();
 	DrawTitle("Do You Really Want Exit?", nwidth);
 	DrawTip(" Y:Yes | N: No", nwidth);
-	key = std::cin.get();
-	if (key == 89 || key == 121)
-	{
-		return true;
-	}
-	return false;
-
 }
 
 void Debug()
@@ -327,22 +319,28 @@ void BControler::StartGame()
 
 void BControler::CheckKey()
 {
+	bool bexiting = false;
 	int pX = 0, pY = 0, ntemp = 0;
 	while (true)
 	{
+		if (GetAsyncKeyState('Y')&&bexiting)
+		{
+			exit(0);
+			break;
+		}
+		else if(GetAsyncKeyState('N') && bexiting)
+		{
+			bexiting = false;
+			DrawMap();
+		}
 		if (GetAsyncKeyState('R') && IsGameOver())
 		{
 			StartGame();
 		}
 		else if (GetAsyncKeyState('E'))
 		{
-			if (ExitApp())
-			{
-				exit(0);
-				break;
-			}
-			else
-				DrawMap();
+			bexiting = true;
+			ExitApp();
 
 		}
 		if (!IsGameOver())
