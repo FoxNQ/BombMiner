@@ -21,7 +21,7 @@ for me <vector> easy to control it, so i will use it in this project.
 ///BControler <-- yah, of course it using Control this game
                   
    +CreateMap <-- i use two for loop Create matrix and use <random> to set random bomb.
-     +Func getRandomBool Will support this Create Matrix.
+     
    
    +DrawMap <-- still two for loop to Draw Matrix To Console
    
