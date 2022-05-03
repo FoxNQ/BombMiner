@@ -23,5 +23,8 @@
     <ClInclude Include="cBItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
