@@ -23,7 +23,7 @@ void DrawTitle(std::string sTitle, int nmaxWidth)
 		nmaxWidth++;
 	DrawFullLineByChar('=', nmaxWidth);
 	DrawTitleLine(" ", nmaxWidth, '|');
-	DrawTitleLine("Bomb Game - FoxNQ", nmaxWidth, '|');
+	DrawTitleLine(sTitle, nmaxWidth, '|');
 	DrawTitleLine(" ", nmaxWidth, '|');
 	DrawFullLineByChar('=', nmaxWidth);
 
@@ -41,6 +41,29 @@ void DrawTip(std::string sTip, int nmaxWidth)
 
 #pragma region SubMethods
 
+void ClearScreen()
+{
+	system("CLS");
+	std::cin.clear();
+	fflush(stdin);
+
+}
+
+bool ExitApp()
+{
+	int nwidth = 40, key = 0;
+	ClearScreen();
+	DrawTitle("Do You Really Want Exit?", nwidth);
+	DrawTip(" Y:Yes | N: No", nwidth);
+	key = std::cin.get();
+	if (key == 89 || key == 121)
+	{
+		return true;
+	}
+	return false;
+
+}
+
 void Debug()
 {
 	//std::cout << "in debug";
@@ -48,31 +71,105 @@ void Debug()
 
 
 
-void DrawTip()
-{
-
-}
-
 std::vector<Point> BControler::getAroundPoints(int& x, int& y)
 {
-	std::vector<Point> points;
-	return points;
+	int pX = 0, pY = 0;
+	std::vector<Point> Points;
+	std::vector<Point> templates{ Point(x - 1, y), Point(x - 1 , y + 1), Point(x , y + 1), Point(x + 1, y + 1), Point(x + 1, y), Point(x + 1, y - 1), Point(x, y - 1), Point(x - 1, y - 1) };
+	for (Point p : templates)
+	{
+		if (Contain(p))
+			Points.emplace_back(p);
+	}
+	return Points;
 }
 
 
 bool BControler::Contain(Point& p)
 {
-	return 0;
+	if (p.getX() >= 0 && p.getX() < nHeight && p.getY() >= 0 && p.getY() < nWidth)
+		return true;
+	return false;
 }
 
 int BControler::getAroundBomb(int& x, int& y)
 {
-	return 0;
+	int nBombAround = 0;
+	BItem* item;
+	std::vector<Point> AroundPoints = getAroundPoints(x, y);
+	for (Point ptmp : AroundPoints)
+	{
+		item = getItem(x, y);
+		if (item&&item->IsBomb())
+			nBombAround++;
+	}
+	return nBombAround;
 }
+
+void BControler::CheckBonus(int x, int y)
+{
+	if (Contain(x, y))
+	{
+		int pX, pY = 0;
+		BItem* itemptr;
+		std::vector<Point> AroundPoints = getAroundPoints(x, y);
+		for (Point p : AroundPoints)
+		{
+			pX = p.getX(); pY = p.getY();
+			if (Contain(pX, pY))
+			{
+				itemptr = getItem(pX, pY);
+				if (!(itemptr->IsSelected()) && itemptr && !(itemptr->IsBomb()))
+				{
+					SelectItem(pX, pY);
+				}
+			}
+		}
+	}
+}
+
 
 int BControler::getAroundBomb(Point& p)
 {
-	return 0;
+	int nBombAround = 0;
+	int pX = p.getX(), pY = p.getY();
+	std::vector<Point> AroundPoints = getAroundPoints(pX, pY);
+	for (Point ptmp : AroundPoints)
+	{
+		pX = ptmp.getX(); pY = ptmp.getY();
+		if (Contain(pX, pY))
+		{
+			if ((*getItem(pX, pY)).IsBomb())
+				nBombAround++;
+		}
+	}
+	return nBombAround;
+}
+
+void BControler::SelectItem(int& x, int& y)
+{
+	BItem* item = getItem(x, y);
+	if (item && !item->IsSelected())
+	{
+		if (item->Select())
+		{
+			GameOver();
+		}
+		else
+		{
+			int BombAround = getAroundBomb(x, y);
+			item->setBombAround(BombAround);
+			if (BombAround == 0)
+			{
+				CheckBonus(x, y);
+			}
+			else
+			{
+				DrawMap();
+			}
+		}
+
+	}
 }
 
 BItem* BControler::getItem(int& x, int& y)
@@ -118,11 +215,14 @@ bool BControler::IsBomb(int& x, int& y)
 	return false;
 }
 
-void BControler::UpdateUserLoc(int& x, int& y)
+bool BControler::UpdateUserLoc(int& x, int& y)
 {
-	if (Contain(x, y) && x != pUserLoc.getX() && y != pUserLoc.getY())
-		UpdateUserLoc(x, y);
-
+	if (Contain(x, y) && (x != pUserLoc.getX() || y != pUserLoc.getY()))
+	{
+		pUserLoc.Update(x, y);
+		return true;
+	}
+	return false;
 }
 
 void BControler::CreateMap(int nBomb)
@@ -130,7 +230,9 @@ void BControler::CreateMap(int nBomb)
 	if (Map.size() > 0)
 		Map.erase(Map.cbegin(), Map.cend());
 
-	int seed = static_cast<int>(std::time(0));
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_int_distribution<int> distance{ 0,1 };
 	bool isrand = false;
 	for (int h = 0; h < nHeight; h++)
 	{
@@ -140,7 +242,7 @@ void BControler::CreateMap(int nBomb)
 			if (nBomb > 0)
 			{
 
-				isrand = static_cast<int>(seed % 2);
+				isrand = distance(mt);
 				nBomb--;
 			}
 			else
@@ -154,7 +256,12 @@ void BControler::CreateMap(int nBomb)
 
 void BControler::DrawMap()
 {
-	if (Map.size() > 0)
+	ClearScreen();
+	int nMaxWidth = nWidth * 5 + 2;
+	if (nMaxWidth < 50)
+		nMaxWidth = 51;
+	DrawTitle("Bomb Game by FoxNQ", nMaxWidth);
+	if (Map.size() > 0 && !IsGameOver())
 	{
 		std::string sData;
 		int nMapHeight = static_cast<int>(Map.size()), nMapWidth = static_cast<int>(Map[0].size());
@@ -170,7 +277,7 @@ void BControler::DrawMap()
 					if (Contain(h, w))
 					{
 						tmp = getItem(h, w)->getBombAround();
-						if (tmp ==-1)
+						if (tmp == -1)
 						{
 							sData = cSerect;
 						}
@@ -180,19 +287,19 @@ void BControler::DrawMap()
 						}
 						if (h == pX && w == pY)
 						{
-							if(w==0)
+							if (w == 0)
 								sData = " [" + sData + "] ";
 							else if (w == nMapWidth - 1)
-								sData = "  [" + sData + "] ";
+								sData = " [" + sData + "] ";
 							else
-								sData = "  [" + sData + "]  ";
+								sData = " [" + sData + "] ";
 						}
 						else
 						{
 							if (w == 0)
 								sData = "  " + sData + "  ";
 							else if (w == nMapWidth - 1)
-								sData = "  " + sData + " ";
+								sData = "  " + sData + "  ";
 							else
 							{
 								sData = "  " + sData + "  ";
@@ -206,16 +313,65 @@ void BControler::DrawMap()
 			}
 		}
 	}
+	DrawTip("Use (W,A,S,D) = Move | Space = Select | E = Exit", nMaxWidth);
 }
 
 void BControler::StartGame()
 {
-	int nMaxWidth = nWidth * 5 + 2;
-	if (nMaxWidth < 50)
-		nMaxWidth = 51;
-	DrawTitle("Bomb Game by FoxNQ", nMaxWidth);
+	setGameOver(false);
 	CreateMap(nBomb);
 	DrawMap();
-	DrawTip("Use (W,A,S,D) = Move | Space = Select | E = Exit", nMaxWidth);
+	CheckKey();
 	//Debug();
 }
+
+void BControler::CheckKey()
+{
+	int pX = 0, pY = 0, ntemp = 0;
+	while (true)
+	{
+		if (GetAsyncKeyState('R') && IsGameOver())
+		{
+			StartGame();
+		}
+		else if (GetAsyncKeyState('E'))
+		{
+			if (ExitApp())
+			{
+				exit(0);
+				break;
+			}
+			else
+				DrawMap();
+
+		}
+		if (!IsGameOver())
+		{
+			if (GetAsyncKeyState('W') && pX - 1 >= 0)
+				pX--;
+			else if (GetAsyncKeyState('A') && pY - 1 >= 0)
+				pY--;
+			else if (GetAsyncKeyState('S') && pX + 1 < nHeight)
+				pX++;
+			else if (GetAsyncKeyState('D') && pY + 1 < nWidth)
+				pY++;
+			else if (GetAsyncKeyState(VK_SPACE))
+			{
+				SelectItem(pX, pY);
+			}
+			if (UpdateUserLoc(pX, pY))
+				DrawMap();
+		}
+
+	}
+}
+
+void BControler::GameOver()
+{
+	ClearScreen();
+	setGameOver(true);
+	int nmaxWidth = 40;
+	DrawTitle("Game Over", nmaxWidth);
+	DrawTip("Press R to ReStart game | E to Exit ", nmaxWidth);
+}
+

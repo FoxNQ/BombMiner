@@ -10,7 +10,7 @@ private:
 
 public:
 	Point() { x = y = 0; }
-	Point(int& X, int& Y) { x = X; y = Y; }
+	Point(int X, int Y) { x = X; y = Y; }
 
 	void Update(int& X, int& Y) { x = X; y = Y; }
 

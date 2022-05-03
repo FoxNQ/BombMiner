@@ -34,18 +34,24 @@ public:
 	bool Contain(Point&);
 	int getAroundBomb(int&, int&);
 	int getAroundBomb(Point&);
-
-	BItem* getItem(int&, int&);
 	int getUserLocX() { return pUserLoc.getX(); }
 	int getUserLocY() { return pUserLoc.getY(); }
+
+	void setGameOver(bool b) { bIsGameOver = b; };
+
+	void SelectItem(int&, int&);
+	BItem* getItem(int&, int&);
 	bool IsBomb(int&, int&);
 	bool IsGameOver() { return bIsGameOver; }
-	void UpdateUserLoc(int&, int&);
+	bool UpdateUserLoc(int&, int&);
 
 	void CreateMap(int);
 	void DrawMap();
 	void StartGame();
+	void CheckKey();
+	void GameOver();
 	
+	void CheckBonus(int, int);
 };
 
 #endif
