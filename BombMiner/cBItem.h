@@ -13,7 +13,7 @@ private:
 public:
 	BItem(bool& b) 
 	{
-		bIsBomb = b;
+		bIsBomb = b; 
 		bIsSelected = false;
 		nBombAround = 0;
 	};
