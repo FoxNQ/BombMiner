@@ -18,34 +18,30 @@ public:
 		nBombAround = 0;
 	};
 
-	bool Select();
-	bool IsSelected() { return bIsSelected; }
-	bool IsBomb() { return bIsBomb; }
-
+	
+	bool IsSelected() { return bIsSelected; };
+	bool IsBomb() { return bIsBomb; };
 	int getBombAround()
 	{
 		if (!bIsSelected)
 			return -1;
 		else
 			return nBombAround;
+	};
+	bool Select() 
+	{
+		bIsSelected = true;
+		if (bIsBomb)
+			return true;
+		return false;
 	}
-	void setBombAround(int&);
+	void setBombAround(int& nBomb) 
+	{
+		if (IsSelected())
+		{
+			nBombAround = nBomb;
+		}
+	};
 
 };
-
-bool BItem::Select()
-{
-	bIsSelected = true;
-	if (bIsBomb)
-		return true;
-	return false;
-}
-
-void BItem::setBombAround(int& nBomb)
-{
-	if (IsSelected())
-	{
-		nBombAround = nBomb;
-	}
-}
 #endif

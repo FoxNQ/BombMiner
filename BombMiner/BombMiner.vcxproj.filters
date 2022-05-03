@@ -18,12 +18,18 @@
     <ClCompile Include="BombMiner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cBControler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cBItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cBControler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

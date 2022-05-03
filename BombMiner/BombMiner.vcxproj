@@ -140,8 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BombMiner.cpp" />
+    <ClCompile Include="cBControler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cBControler.h" />
     <ClInclude Include="cBItem.h" />
     <ClInclude Include="cPoint.h" />
   </ItemGroup>
