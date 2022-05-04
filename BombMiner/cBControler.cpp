@@ -218,8 +218,8 @@ bool BControler::UpdateUserLoc(int& x, int& y)
 
 void BControler::CreateMap(int nBomb)
 {
-	std::cout << "game is in update , pls comback later, thank you!!";
-	/*bool isrand = false;
+	
+	bool isrand = false;
 	if (Map.size() > 0)
 		Map.erase(Map.begin(), Map.end());
 
@@ -227,7 +227,7 @@ void BControler::CreateMap(int nBomb)
 	for (int h = 0; h < nHeight; h++)
 	{
 		Map[h].assign(nHeight, BItem(isrand));
-	}*/
+	}
 
 
 }

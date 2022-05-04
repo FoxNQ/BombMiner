@@ -16,7 +16,8 @@ void sLowerCase(std::string& s)
 
 int main()
 {
-    std::string difficulty = "";
+    std::cout << "game being update , pls come later, thank you!!";
+    /*std::string difficulty = "";
 	char cSecrec = '*';
     int nWidth=0, nHeight=0, nPercent=40;
     std::cout << "Input Size Map ( Height ):";
@@ -40,6 +41,6 @@ int main()
 
 
     BControler control(nHeight,nWidth,nPercent,cSecrec);
-   control.StartGame();
+   control.StartGame();*/
 
 }
