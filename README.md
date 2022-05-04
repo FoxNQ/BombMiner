@@ -18,7 +18,17 @@ for me <vector> easy to control it, so i will use it in this project.
 
 ///Bitem <-- use Create and Draw A Matrix Map
 
+ 
+  BControler 
+ 
+ 
 ///BControler <-- yah, of course it using Control this game
+                  
+      Thread:
+                  set(Width Height) ------> StartGame Func ------> CreateMap ------> DrawMap ------> Key Check
+                    (in Contructor)                                                       ^              | 
+                                                                                          |              v
+                                                                                          +<----------If Move
                   
    +CreateMap <-- i use two for loop Create matrix and use <random> to set random bomb.
      
@@ -27,4 +37,3 @@ for me <vector> easy to control it, so i will use it in this project.
    
    +KeyCheck <-- use while loop and GetAsyncKeyStats to read key user press to move Point.
    
-   +
