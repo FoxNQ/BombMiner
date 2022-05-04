@@ -218,30 +218,21 @@ bool BControler::UpdateUserLoc(int& x, int& y)
 
 void BControler::CreateMap(int nBomb)
 {
-	if (Map.size() > 0)
-		Map.erase(Map.cbegin(), Map.cend());
 
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_int_distribution<int> distance{ 0,1 };
 	bool isrand = false;
-	for (int h = 0; h < nHeight; h++)
-	{
-		Map.emplace_back(std::vector<BItem>());
-		for (int w = 0; w < nWidth; w++)
-		{
-			if (nBomb > 0)
-			{
+	if (Map.size() > 0)
+		Map.erase(Map.begin(), Map.end());
 
-				isrand = distance(mt);
-				nBomb--;
-			}
-			else
-			{
-				isrand = false;
-			}
-			Map[h].emplace_back(BItem(isrand));
-		}
+	Map.assign(nHeight, std::vector<BItem>());
+	for (int w = 0; w < nWidth; w++)
+	{
+		Map[w].assign(nHeight, BItem(isrand));
+	}
+
+	for (int i = 0; i < nBomb; i++)
+	{
+		Map.emplace_back();
+		
 	}
 }
 
