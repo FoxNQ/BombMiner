@@ -37,11 +37,11 @@ public:
 	}
 	void setBombAround(int& nBomb) 
 	{
-		if (IsSelected())
+		if (bIsSelected)
 		{
 			nBombAround = nBomb;
 		}
 	};
-
+	
 };
 #endif

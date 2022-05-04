@@ -76,6 +76,12 @@ std::vector<Point> BControler::getAroundPoints(int& x, int& y)
 	return Points;
 }
 
+bool BControler::Contain(int& x, int& y)
+{
+	if (x >= 0 && x < nHeight && y >= 0 && y < nWidth)
+		return true;
+	return false;
+}
 
 bool BControler::Contain(Point& p)
 {
@@ -125,15 +131,14 @@ int BControler::getAroundBomb(Point& p)
 {
 	int nBombAround = 0;
 	int pX = p.getX(), pY = p.getY();
+	BItem* itemPtr;
 	std::vector<Point> AroundPoints = getAroundPoints(pX, pY);
 	for (Point ptmp : AroundPoints)
 	{
 		pX = ptmp.getX(); pY = ptmp.getY();
-		if (Contain(pX, pY))
-		{
-			if ((*getItem(pX, pY)).IsBomb())
+		itemPtr = getItem(pX, pY);
+		if (itemPtr&&itemPtr->IsBomb())
 				nBombAround++;
-		}
 	}
 	return nBombAround;
 }
@@ -171,12 +176,6 @@ BItem* BControler::getItem(int& x, int& y)
 	return nullptr;
 }
 
-bool BControler::Contain(int& x, int& y)
-{
-	if (x >= 0 && x < nHeight && y >= 0 && y < nWidth)
-		return true;
-	return false;
-}
 
 #pragma endregion
 
