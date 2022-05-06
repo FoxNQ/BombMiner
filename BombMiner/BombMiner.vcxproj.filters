@@ -32,5 +32,8 @@
     <ClInclude Include="cBControler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cDrawSP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

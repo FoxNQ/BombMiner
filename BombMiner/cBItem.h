@@ -21,6 +21,7 @@ public:
 	
 	bool IsSelected() { return bIsSelected; };
 	bool IsBomb() { return bIsBomb; };
+
 	int getBombAround()
 	{
 		if (!bIsSelected)
@@ -35,6 +36,8 @@ public:
 			return true;
 		return false;
 	}
+	void setBomb(bool b) { bIsBomb = b; }
+	
 	void setBombAround(int& nBomb) 
 	{
 		if (bIsSelected)

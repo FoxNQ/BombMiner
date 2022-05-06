@@ -146,6 +146,7 @@
     <ClInclude Include="cBControler.h" />
     <ClInclude Include="cBItem.h" />
     <ClInclude Include="cPoint.h" />
+    <ClInclude Include="cDrawSP.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
